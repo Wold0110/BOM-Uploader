@@ -10,13 +10,13 @@ db.Open();
 
 
 //del prev
-Console.Write("Nuke previous data?");
+Console.Write("Nuke previous data? ");
 var answ = Console.ReadKey().Key;
 if(answ == ConsoleKey.Y || answ == ConsoleKey.I)
 {
     Console.WriteLine("");
     Console.WriteLine("Deleting current data...");
-    string[] tables = { "part_types", "bom", "timestamps", "products" };
+    string[] tables = { "part_types", "bom", "timestamps", "products","operator" };
     foreach(var x in tables)
     {
         string truncate = "TRUNCATE `"+x+"`";
@@ -75,19 +75,30 @@ for(int i = 1; i < lines.Length; ++i)
     MySqlCommand prodIdCmd = new MySqlCommand(prodId,db);
     int id = int.Parse(prodIdCmd.ExecuteScalar().ToString());
     //got id, insert parts
-
-    for(int j = 2; j < line.Length; ++j)
+    
+    string insert = "INSERT INTO `bom` VALUES";
+    for (int j = 2; j < line.Length; ++j)
     {
         if (!String.IsNullOrWhiteSpace(line[j])){
-            string insert = "INSERT INTO `bom` VALUES(" + id + "," + partIds[j - 2] + ",'" + line[j] + "')";
-            MySqlCommand bomCmd = new MySqlCommand(insert, db);
-            bomCmd.ExecuteNonQuery();
+            insert+="(" + id + "," + partIds[j - 2] + ",'" + line[j] + "')";
+            insert += j + 1 == line.Length ? "" : ",";
         }
-        
     }
+    MySqlCommand bomCmd = new MySqlCommand(insert, db);
+    bomCmd.ExecuteNonQuery();
     Console.WriteLine("product: "+i+" added");
 
 }
+
+//operators
+lines = File.ReadAllLines("operators.txt");
+foreach(var x in lines)
+{
+    string insertOperatorSql = "INSERT INTO `operator` VALUES(NULL,'"+x+"')";
+    MySqlCommand insertOperatorCmd = new MySqlCommand(insertOperatorSql,db);
+    insertOperatorCmd.ExecuteNonQuery();
+}
+Console.WriteLine("operators added");
 
 db.CloseAsync();
 Console.WriteLine("end...");
