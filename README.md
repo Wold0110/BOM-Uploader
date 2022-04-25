@@ -1,5 +1,5 @@
 # BOM-Uploader
-## Upload BOM for quality_web website project
+## Upload BOM for quality_web website project: https://github.com/Wold0110/quality_web
 ### .NET 6.0 LTS
 requirement for running
 
@@ -9,5 +9,4 @@ requirement for running
 
 ### Current database target:
 localhost  
-
 
