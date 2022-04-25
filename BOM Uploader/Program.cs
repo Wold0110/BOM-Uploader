@@ -38,6 +38,7 @@ List<int> partIds = new List<int>();
 for(int i = 2; i < headers.Length; ++i)
 {
     //is the category already present?
+    headers[i] = headers[i].Trim();
     string headerQuery = "SELECT COUNT(*) FROM `part_types` WHERE name = '"+headers[i]+"'";
     MySqlCommand headerCommand = new MySqlCommand(headerQuery,db);
     int c = int.Parse(headerCommand.ExecuteScalar().ToString());
@@ -58,8 +59,8 @@ Console.WriteLine("part types added");
 for(int i = 1; i < lines.Length; ++i)
 {
     string[] line = lines[i].Split(',');
-    string name = line[0];
-    string refer = line[1];
+    string name = line[0].Trim();
+    string refer = line[1].Trim();
 
     //does the product even exist?
     string prodQuery = "SELECT COUNT(*) FROM `products` WHERE name = '"+name+"' AND ref = '"+refer+"'";
@@ -80,6 +81,7 @@ for(int i = 1; i < lines.Length; ++i)
     for (int j = 2; j < line.Length; ++j)
     {
         if (!String.IsNullOrWhiteSpace(line[j])){
+            line[j] = line[j].Trim();
             insert+="(" + id + "," + partIds[j - 2] + ",'" + line[j] + "')";
             insert += j + 1 == line.Length ? "" : ",";
         }
@@ -87,7 +89,6 @@ for(int i = 1; i < lines.Length; ++i)
     MySqlCommand bomCmd = new MySqlCommand(insert, db);
     bomCmd.ExecuteNonQuery();
     Console.WriteLine("product: "+i+" added");
-
 }
 
 //operators
@@ -101,5 +102,5 @@ foreach(var x in lines)
 Console.WriteLine("operators added");
 
 db.CloseAsync();
-Console.WriteLine("end...");
+Console.WriteLine("end, press key...");
 Console.ReadKey();
