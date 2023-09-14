@@ -4,7 +4,7 @@ using System.IO;
 // See https://aka.ms/new-console-template for more information
 
 //connect to db
-string connectionString = @"server=localhost;userid=quality;password=Qu4l1ty;database=quality_web";
+string connectionString = @"server=10.147.16.29;userid=quality;password=Qu4l1ty;database=quality_web";
 MySqlConnection db = new MySqlConnection(connectionString);
 db.Open();
 
