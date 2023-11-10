@@ -16,7 +16,7 @@ if(answ == ConsoleKey.Y || answ == ConsoleKey.I)
 {
     Console.WriteLine("");
     Console.WriteLine("Deleting current data...");
-    string[] tables = { "part_types", "bom", "timestamps", "products","operator" };
+    string[] tables = { "part_types", "bom", "products" };
     foreach(var x in tables)
     {
         string truncate = "TRUNCATE `"+x+"`";
@@ -90,16 +90,6 @@ for(int i = 1; i < lines.Length; ++i)
     bomCmd.ExecuteNonQuery();
     Console.WriteLine("product: "+i+" added");
 }
-
-//operators
-lines = File.ReadAllLines("operators.txt");
-foreach(var x in lines)
-{
-    string insertOperatorSql = "INSERT INTO `operator` VALUES(NULL,'"+x+"')";
-    MySqlCommand insertOperatorCmd = new MySqlCommand(insertOperatorSql,db);
-    insertOperatorCmd.ExecuteNonQuery();
-}
-Console.WriteLine("operators added");
 
 db.CloseAsync();
 Console.WriteLine("end, press key...");
